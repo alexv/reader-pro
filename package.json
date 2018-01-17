@@ -4,11 +4,12 @@
   "private": true,
   "author": "Alex Villarreal <alex@avill.io>",
   "repository": {
-        "type": "git",
-        "url": "git+https://github.com/avill01/reader-pro.git"
-    },
+    "type": "git",
+    "url": "git+https://github.com/avill01/reader-pro.git"
+  },
   "dependencies": {
     "react": "^16.2.0",
+    "react-bootstrap": "^0.32.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.0"
   },
