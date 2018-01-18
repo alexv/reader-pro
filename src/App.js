@@ -52,7 +52,7 @@ class App extends Component {
           <Navbar fluid collapseOnSelect>
             <Navbar.Header>
               <Navbar.Brand>
-                <Link to="/">Reader</Link>
+                <Link to="/">Reader Pro</Link>
               </Navbar.Brand>
               <Navbar.Toggle />
             </Navbar.Header>
