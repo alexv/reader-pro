@@ -25,7 +25,7 @@ class App extends Component {
         this.userHasAuthenticated(true);
       }
     } catch (e) {
-      alert(e);
+      alert(e); // eslint-disable-line
     }
     this.setState({ isAuthenticating: false });
   }
@@ -34,7 +34,7 @@ class App extends Component {
     this.setState({ isAuthenticated: authenticated });
   }
 
-  handleLogout(event) {
+  handleLogout() {
     signOutUser();
     this.userHasAuthenticated(false);
     this.props.history.push('/login');
@@ -47,38 +47,44 @@ class App extends Component {
     };
 
     return (
-      !this.state.isAuthenticating &&
-      <div className="App container">
-        <Navbar fluid collapseOnSelect>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <Link to="/">Reader</Link>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav pullRight>
-              {this.state.isAuthenticated
-                ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
-                : [
-                  <RouteNavItem key={1} href="/signup">
-                    Signup
-                  </RouteNavItem>,
-                  <RouteNavItem key={2} href="/login">
-                    Login
-                  </RouteNavItem>,
-                ]}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <Routes childProps={childProps} />
-      </div>
+      !this.state.isAuthenticating && (
+        <div className="App container">
+          <Navbar fluid collapseOnSelect>
+            <Navbar.Header>
+              <Navbar.Brand>
+                <Link to="/">Reader</Link>
+              </Navbar.Brand>
+              <Navbar.Toggle />
+            </Navbar.Header>
+            <Navbar.Collapse>
+              <Nav pullRight>
+                {this.state.isAuthenticated ? (
+                  <NavItem onClick={this.handleLogout}>Logout</NavItem>
+                ) : (
+                  [
+                    <RouteNavItem key={1} href="/signup">
+                      Signup
+                    </RouteNavItem>,
+                    <RouteNavItem key={2} href="/login">
+                      Login
+                    </RouteNavItem>,
+                  ]
+                )}
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <Routes childProps={childProps} />
+        </div>
+      )
     );
   }
 }
 
-App.defaultProps = {
-  history: PropTypes.object,
+App.propTypes = {
+  history: PropTypes.shape({
+    location: PropTypes.array,
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 export default withRouter(App);
