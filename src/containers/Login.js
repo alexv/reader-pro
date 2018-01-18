@@ -23,7 +23,9 @@ export default class Login extends Component {
   }
 
   validateForm() {
-    return this.state.email.length > 0 && this.state.email.indexOf('@') !== -1 && this.state.password.length > 0;
+    return this.state.email.length > 0 &&
+      this.state.email.indexOf('@') !== -1 &&
+      this.state.password.length > 0;
   }
 
   handleChange(event) {
@@ -37,8 +39,8 @@ export default class Login extends Component {
 
     try {
       await this.login(this.state.email, this.state.password);
-      // this.props.userHasAuthenticated(true)
-      alert('Logged in, what up homie its me Mitch');
+      this.props.userHasAuthenticated(true);
+      this.props.history.push('/');
     } catch (e) {
       alert(e);
     }
