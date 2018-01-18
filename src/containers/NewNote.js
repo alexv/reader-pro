@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl } from 'react-bootstrap';
-import LoaderButton from '../components/LoaderButton';
-import './NewNote.css';
+import PropTypes from 'prop-types';
 
-export default class NewNote extends Component {
+import './NewNote.css';
+import { invokeApig } from '../libs/awsLibs';
+import LoaderButton from '../components/LoaderButton';
+
+function createNote(feed) {
+  return invokeApig({
+    path: '/feeds',
+    method: 'POST',
+    body: feed,
+  });
+}
+
+class NewNote extends Component {
   constructor(props) {
     super(props);
 
@@ -31,6 +42,16 @@ export default class NewNote extends Component {
     event.preventDefault();
 
     this.setState({ isLoading: true });
+
+    try {
+      await createNote({
+        content: this.state.content,
+      });
+      this.props.history.push('/');
+    } catch (e) {
+      alert(e);
+      this.setState({ isLoading: false });
+    }
   }
 
   render() {
@@ -59,3 +80,12 @@ export default class NewNote extends Component {
     );
   }
 }
+
+NewNote.propTypes = {
+  history: PropTypes.shape({
+    location: PropTypes.object,
+    push: PropTypes.func,
+  }).isRequired,
+};
+
+export default NewNote;

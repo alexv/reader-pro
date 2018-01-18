@@ -82,7 +82,7 @@ class App extends Component {
 
 App.propTypes = {
   history: PropTypes.shape({
-    location: PropTypes.array,
+    location: PropTypes.object,
     push: PropTypes.func,
   }).isRequired,
 };

@@ -64,6 +64,10 @@ export function signOutUser() {
   if (currentUser !== null) {
     currentUser.signOut();
   }
+  if (AWS.config.credentials) {
+    AWS.config.credentials.clearCachedId();
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({});
+  }
 }
 
 export async function invokeApig({

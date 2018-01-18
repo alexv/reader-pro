@@ -12,7 +12,6 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-/* eslint max-len: ["error", 100] */
 
 import SHA256 from 'crypto-js/sha256';
 import encHex from 'crypto-js/enc-hex';
@@ -41,10 +40,7 @@ sigV4Client.newClient = function (config) {
   }
 
   function buildCanonicalRequest(method, path, queryParams, headers, payload) {
-    return `${method}\n${buildCanonicalUri(path)}\n
-    ${buildCanonicalQueryString(queryParams)}\n${buildCanonicalHeaders(headers)}\n
-    ${buildCanonicalSignedHeaders(headers)}\n
-    ${hexEncode(hash(payload))}`;
+    return `${method}\n${buildCanonicalUri(path)}\n${buildCanonicalQueryString(queryParams)}\n${buildCanonicalHeaders(headers)}\n${buildCanonicalSignedHeaders(headers)}\n${hexEncode(hash(payload))}`;
   }
 
   function hashCanonicalRequest(request) {
@@ -70,8 +66,7 @@ sigV4Client.newClient = function (config) {
 
     let canonicalQueryString = '';
     for (let i = 0; i < sortedQueryParams.length; i++) {
-      canonicalQueryString += `${sortedQueryParams[i]}=
-      ${encodeURIComponent(queryParams[sortedQueryParams[i]])}&`;
+      canonicalQueryString += `${sortedQueryParams[i]}=${encodeURIComponent(queryParams[sortedQueryParams[i]])}&`;
     }
     return canonicalQueryString.substr(0, canonicalQueryString.length - 1);
   }
@@ -139,8 +134,7 @@ sigV4Client.newClient = function (config) {
   }
 
   function buildAuthorizationHeader(accessKey, credentialScope, headers, signature) {
-    return `${AWS_SHA_256} Credential=${accessKey}/${credentialScope},
-    SignedHeaders=${buildCanonicalSignedHeaders(headers)}, Signature=${signature}`;
+    return `${AWS_SHA_256} Credential=${accessKey}/${credentialScope}, SignedHeaders=${buildCanonicalSignedHeaders(headers)}, Signature=${signature}`;
   }
 
   const awsSigV4Client = {};

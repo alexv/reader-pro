@@ -18,7 +18,7 @@ const LoaderButton = ({
 );
 
 LoaderButton.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool,
   text: PropTypes.string.isRequired,
   loadingText: PropTypes.string.isRequired,
   className: PropTypes.string,
@@ -28,6 +28,7 @@ LoaderButton.propTypes = {
 LoaderButton.defaultProps = {
   className: '',
   disabled: false,
+  isLoading: false,
 };
 
 export default LoaderButton;
