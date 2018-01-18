@@ -8,6 +8,7 @@
     "url": "git+https://github.com/avill01/reader-pro.git"
   },
   "dependencies": {
+    "amazon-cognito-identity-js": "^1.31.0",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.0",
     "react-dom": "^16.2.0",
