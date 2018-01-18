@@ -101,7 +101,7 @@ class Login extends Component {
 Login.propTypes = {
   userHasAuthenticated: PropTypes.func.isRequired,
   history: PropTypes.shape({
-    location: PropTypes.array,
+    location: PropTypes.object,
     push: PropTypes.func,
   }).isRequired,
 };
