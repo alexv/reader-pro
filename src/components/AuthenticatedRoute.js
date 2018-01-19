@@ -16,12 +16,16 @@ const AuthenticatedRoute = ({ component: C, props: cProps, ...rest }) => (
 );
 
 AuthenticatedRoute.propTypes = {
-  component: PropTypes.element.isRequired,
+  component: PropTypes.func.isRequired,
   location: PropTypes.shape({
     pathname: PropTypes.string,
     search: PropTypes.string,
-  }).isRequired,
+  }),
   props: PropTypes.shape({}).isRequired,
+};
+
+AuthenticatedRoute.defaultProps = {
+  location: {},
 };
 
 export default AuthenticatedRoute;

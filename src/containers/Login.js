@@ -59,7 +59,6 @@ class Login extends Component {
     try {
       await login(this.state.email, this.state.password);
       this.props.userHasAuthenticated(true);
-      this.props.history.push('/');
     } catch (e) {
       alert(e); // eslint-disable-line
       this.setState({ isLoading: false });
