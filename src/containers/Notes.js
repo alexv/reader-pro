@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import './Notes.css';
-import config from '../config';
+// import config from '../config';
 import { invokeApig } from '../libs/awsLibs';
 import LoaderButton from '../components/LoaderButton';
 
@@ -25,6 +25,11 @@ class Notes extends Component {
       note: null,
       content: '',
     };
+
+    this.validateForm = this.validateForm.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   async componentDidMount() {
@@ -40,7 +45,7 @@ class Notes extends Component {
   }
 
   getNote() {
-    return invokeApig({ path: `/notes/${this.props.match.params.id}` });
+    return invokeApig({ path: `/feeds/${this.props.match.params.id}` });
   }
 
   validateForm() {
@@ -57,15 +62,36 @@ class Notes extends Component {
     [this.file] = event.target.files;
   }
 
+  saveNote(note) {
+    return invokeApig({
+      path: `/feeds/${this.props.match.params.id}`,
+      method: 'PUT',
+      body: note,
+    });
+  }
+
   async handleSubmit(event) {
     event.preventDefault();
 
-    if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-      alert('Please pick a file smaller than 5MB');
-      return;
-    }
-
     this.setState({ isLoading: true });
+
+    try {
+      await this.saveNote({
+        ...this.state.note,
+        content: this.state.content,
+      });
+      this.props.history.push('/');
+    } catch (e) {
+      alert(e);
+      this.setState({ isLoading: false });
+    }
+  }
+
+  deleteNote() {
+    return invokeApig({
+      path: `/feeds/${this.props.match.params.id}`,
+      method: 'DELETE',
+    });
   }
 
   async handleDelete(event) {
@@ -78,6 +104,14 @@ class Notes extends Component {
     }
 
     this.setState({ isDeleting: true });
+
+    try {
+      await this.deleteNote();
+      this.props.history.push('/');
+    } catch (e) {
+      alert(e);
+      this.setState({ isDeleting: false });
+    }
   }
 
   render() {
@@ -137,6 +171,9 @@ Notes.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string,
     }),
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
   }).isRequired,
 };
 
