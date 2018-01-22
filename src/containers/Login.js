@@ -5,6 +5,7 @@ import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cogn
 
 import './Login.css';
 import config from '../config';
+import Portal from '../components/Portal';
 import LoaderButton from '../components/LoaderButton';
 
 function login(email, password) {
@@ -29,6 +30,8 @@ class Login extends Component {
 
     this.state = {
       isLoading: false,
+      showModal: false,
+      modalContent: '',
       email: '',
       password: '',
     };
@@ -60,8 +63,11 @@ class Login extends Component {
       await login(this.state.email, this.state.password);
       this.props.userHasAuthenticated(true);
     } catch (e) {
-      alert(e); // eslint-disable-line
-      this.setState({ isLoading: false });
+      this.setState({
+        showModal: true,
+        modalContent: 'Incorrect username or password.',
+        isLoading: false,
+      });
     }
   }
 
@@ -92,6 +98,17 @@ class Login extends Component {
             loadingText="Logging in…"
           />
         </form>
+        <Portal
+          header="Login"
+          open={this.state.showModal}
+          onClose={() =>
+            this.setState({
+              showModal: false,
+            })
+          }
+        >
+          <h1>Content: {this.state.modalContent}</h1>
+        </Portal>
       </div>
     );
   }
