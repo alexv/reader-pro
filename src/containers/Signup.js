@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { HelpBlock, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { HelpBlock, FormGroup, FormControl, ControlLabel, Modal } from 'react-bootstrap';
 import { AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
 
 import './Signup.css';
@@ -54,6 +54,8 @@ class Signup extends Component {
 
     this.state = {
       isLoading: false,
+      showModal: false,
+      modalContent: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -97,7 +99,10 @@ class Signup extends Component {
         newUser,
       });
     } catch (e) {
-      alert(e); //eslint-disable-line
+      this.setState({
+        showModal: true,
+        modalContent: e.message,
+      });
     }
 
     this.setState({ isLoading: false });
@@ -115,8 +120,11 @@ class Signup extends Component {
       this.props.userHasAuthenticated(true);
       this.props.history.push('/');
     } catch (e) {
-      alert(e); //eslint-disable-line
-      this.setState({ isLoading: false });
+      this.setState({
+        showModal: true,
+        modalContent: e.message,
+        isLoading: false,
+      });
     }
   }
 
@@ -187,6 +195,19 @@ class Signup extends Component {
     return (
       <div className="Signup">
         {this.state.newUser === null ? this.renderForm() : this.renderConfirmationForm()}
+        <Modal
+          show={this.state.showModal}
+          onHide={() =>
+            this.setState({
+              showModal: false,
+            })
+          }
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Signup</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{this.state.modalContent}</Modal.Body>
+        </Modal>
       </div>
     );
   }
