@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Modal } from 'react-bootstrap';
 import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 
 import './Login.css';
 import config from '../config';
-import Portal from '../components/Portal';
 import LoaderButton from '../components/LoaderButton';
 
 function login(email, password) {
@@ -98,17 +97,19 @@ class Login extends Component {
             loadingText="Logging in…"
           />
         </form>
-        <Portal
-          header="Login"
-          open={this.state.showModal}
-          onClose={() =>
+        <Modal
+          show={this.state.showModal}
+          onHide={() =>
             this.setState({
               showModal: false,
             })
           }
         >
-          <h1>Content: {this.state.modalContent}</h1>
-        </Portal>
+          <Modal.Header closeButton>
+            <Modal.Title>Login</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{this.state.modalContent}</Modal.Body>
+        </Modal>
       </div>
     );
   }
