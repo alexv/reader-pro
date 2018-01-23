@@ -16,33 +16,33 @@ const AsyncNotFound = asyncComponent(() => import('./containers/NotFound'))
 
 const Routes = ({ childProps }) => (
   <Switch>
-    <AppliedRoute path="/" exact component={Home} props={childProps} />
+    <AppliedRoute path="/" exact component={AsyncHome} props={childProps} />
     <UnauthenticatedRoute
       path="/login"
       exact
-      component={Login}
+      component={AsyncLogin}
       props={childProps}
     />
     <UnauthenticatedRoute
       path="/signup"
       exact
-      component={Signup}
+      component={AsyncSignup}
       props={childProps}
     />
     <AuthenticatedRoute
       path="/notes/new"
       exact
-      component={NewNote}
+      component={AsyncNewNote}
       props={childProps}
     />
     <AuthenticatedRoute
       path="/notes/:id"
       exact
-      component={Notes}
+      component={AsyncNotes}
       props={childProps}
     />
     {/* Finally, catch all unmatched routes */}
-    <Route component={NotFound} />
+    <Route component={AsyncNotFound} />
   </Switch>
 )
 
