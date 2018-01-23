@@ -1,56 +1,68 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { HelpBlock, FormGroup, FormControl, ControlLabel, Modal } from 'react-bootstrap';
-import { AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import {
+  HelpBlock,
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  Modal
+} from 'react-bootstrap'
+import {
+  AuthenticationDetails,
+  CognitoUserPool
+} from 'amazon-cognito-identity-js'
 
-import './Signup.css';
-import config from '../config';
-import LoaderButton from '../components/LoaderButton';
+import './Signup.css'
+import config from '../config'
+import LoaderButton from '../components/LoaderButton'
 
 function signup(email, password) {
   const userPool = new CognitoUserPool({
     UserPoolId: config.cognito.USER_POOL_ID,
-    ClientId: config.cognito.APP_CLIENT_ID,
-  });
+    ClientId: config.cognito.APP_CLIENT_ID
+  })
 
   return new Promise((resolve, reject) =>
     userPool.signUp(email, password, [], null, (err, result) => {
       if (err) {
-        reject(err);
-        return;
+        reject(err)
+        return
       }
-      resolve(result.user);
-    }));
+      resolve(result.user)
+    })
+  )
 }
 
 function confirm(user, confirmationCode) {
   return new Promise((resolve, reject) =>
     user.confirmRegistration(confirmationCode, true, (err, result) => {
       if (err) {
-        reject(err);
-        return;
+        reject(err)
+        return
       }
-      resolve(result);
-    }));
+      resolve(result)
+    })
+  )
 }
 
 function authenticate(user, email, password) {
   const authenticationData = {
     Username: email,
-    Password: password,
-  };
-  const authenticationDetails = new AuthenticationDetails(authenticationData);
+    Password: password
+  }
+  const authenticationDetails = new AuthenticationDetails(authenticationData)
 
   return new Promise((resolve, reject) =>
     user.authenticateUser(authenticationDetails, {
       onSuccess: () => resolve(),
-      onFailure: err => reject(err),
-    }));
+      onFailure: err => reject(err)
+    })
+  )
 }
 
 class Signup extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isLoading: false,
@@ -60,14 +72,14 @@ class Signup extends Component {
       password: '',
       confirmPassword: '',
       confirmationCode: '',
-      newUser: null,
-    };
+      newUser: null
+    }
 
-    this.validateForm = this.validateForm.bind(this);
-    this.validateConfirmationForm = this.validateConfirmationForm.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleConfirmationSubmit = this.handleConfirmationSubmit.bind(this);
+    this.validateForm = this.validateForm.bind(this)
+    this.validateConfirmationForm = this.validateConfirmationForm.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleConfirmationSubmit = this.handleConfirmationSubmit.bind(this)
   }
 
   validateForm() {
@@ -75,56 +87,60 @@ class Signup extends Component {
       this.state.email.length > 0 &&
       this.state.password.length > 0 &&
       this.state.password === this.state.confirmPassword
-    );
+    )
   }
 
   validateConfirmationForm() {
-    return this.state.confirmationCode.length > 0;
+    return this.state.confirmationCode.length > 0
   }
 
   handleChange(event) {
     this.setState({
-      [event.target.id]: event.target.value,
-    });
+      [event.target.id]: event.target.value
+    })
   }
 
   async handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true })
 
     try {
-      const newUser = await signup(this.state.email, this.state.password);
+      const newUser = await signup(this.state.email, this.state.password)
       this.setState({
-        newUser,
-      });
+        newUser
+      })
     } catch (e) {
       this.setState({
         showModal: true,
-        modalContent: e.message,
-      });
+        modalContent: e.message
+      })
     }
 
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: false })
   }
 
   async handleConfirmationSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true })
 
     try {
-      await confirm(this.state.newUser, this.state.confirmationCode);
-      await authenticate(this.state.newUser, this.state.email, this.state.password);
+      await confirm(this.state.newUser, this.state.confirmationCode)
+      await authenticate(
+        this.state.newUser,
+        this.state.email,
+        this.state.password
+      )
 
-      this.props.userHasAuthenticated(true);
-      this.props.history.push('/');
+      this.props.userHasAuthenticated(true)
+      this.props.history.push('/')
     } catch (e) {
       this.setState({
         showModal: true,
         modalContent: e.message,
-        isLoading: false,
-      });
+        isLoading: false
+      })
     }
   }
 
@@ -151,7 +167,7 @@ class Signup extends Component {
           loadingText="Verifying…"
         />
       </form>
-    );
+    )
   }
 
   renderForm() {
@@ -168,7 +184,11 @@ class Signup extends Component {
         </FormGroup>
         <FormGroup controlId="password" bsSize="large">
           <ControlLabel>Password</ControlLabel>
-          <FormControl value={this.state.password} onChange={this.handleChange} type="password" />
+          <FormControl
+            value={this.state.password}
+            onChange={this.handleChange}
+            type="password"
+          />
         </FormGroup>
         <FormGroup controlId="confirmPassword" bsSize="large">
           <ControlLabel>Confirm Password</ControlLabel>
@@ -188,18 +208,20 @@ class Signup extends Component {
           loadingText="Signing up…"
         />
       </form>
-    );
+    )
   }
 
   render() {
     return (
       <div className="Signup">
-        {this.state.newUser === null ? this.renderForm() : this.renderConfirmationForm()}
+        {this.state.newUser === null
+          ? this.renderForm()
+          : this.renderConfirmationForm()}
         <Modal
           show={this.state.showModal}
           onHide={() =>
             this.setState({
-              showModal: false,
+              showModal: false
             })
           }
         >
@@ -209,7 +231,7 @@ class Signup extends Component {
           <Modal.Body>{this.state.modalContent}</Modal.Body>
         </Modal>
       </div>
-    );
+    )
   }
 }
 
@@ -217,8 +239,8 @@ Signup.propTypes = {
   userHasAuthenticated: PropTypes.func.isRequired,
   history: PropTypes.shape({
     location: PropTypes.object,
-    push: PropTypes.func,
-  }).isRequired,
-};
+    push: PropTypes.func
+  }).isRequired
+}
 
-export default Signup;
+export default Signup
