@@ -72,11 +72,11 @@ class Home extends Component {
         ) : (
           <ListGroupItem
             key="new"
-            href="/notes/new"
+            href="/feeds/new"
             onClick={this.handleNoteClick}
           >
             <h4>
-              <b>{'\uFF0B'}</b> Create a new note
+              <b>{'\uFF0B'}</b> Add a new feed
             </h4>
           </ListGroupItem>
         )

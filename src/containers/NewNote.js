@@ -17,12 +17,10 @@ function createNote(feed) {
 class NewNote extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       isLoading: null,
       content: ''
     }
-
     this.validateForm = this.validateForm.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)

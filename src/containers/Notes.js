@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 
 import './Notes.css'
-// import config from '../config';
 import { invokeApig } from '../libs/awsLibs'
 import LoaderButton from '../components/LoaderButton'
 
