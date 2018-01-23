@@ -10,6 +10,7 @@ node_modules
 /build
 
 # misc
+.config
 .vscode
 .DS_Store
 .env.local
