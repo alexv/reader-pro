@@ -1,28 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
+import { FormGroup, FormControl } from 'react-bootstrap'
 
-import './Notes.css'
+import './Feeds.css'
 import { invokeApig } from '../libs/awsLibs'
 import LoaderButton from '../components/LoaderButton'
 
-function formatFilename(str) {
-  return str.length < 50
-    ? str
-    : `${str.substr(0, 20)}...${str.substr(str.length - 20, str.length)}`
-}
-
-class Notes extends Component {
+class Feeds extends Component {
   constructor(props) {
     super(props)
-
-    this.file = null
 
     this.state = {
       isLoading: null,
       isDeleting: null,
-      note: null,
-      content: ''
+      feed: null,
+      feedName: ''
     }
 
     this.validateForm = this.validateForm.bind(this)
@@ -33,22 +25,22 @@ class Notes extends Component {
 
   async componentDidMount() {
     try {
-      const results = await this.getNote()
+      const results = await this.getFeed()
       this.setState({
-        note: results,
-        content: results.content
+        feed: results,
+        feedName: results.feedName
       })
     } catch (e) {
       alert(e)
     }
   }
 
-  getNote() {
+  getFeed() {
     return invokeApig({ path: `/feeds/${this.props.match.params.id}` })
   }
 
   validateForm() {
-    return this.state.content.length > 0
+    return this.state.feedName.length > 0
   }
 
   handleChange(event) {
@@ -57,15 +49,11 @@ class Notes extends Component {
     })
   }
 
-  handleFileChange(event) {
-    ;[this.file] = event.target.files
-  }
-
-  saveNote(note) {
+  saveFeed(feed) {
     return invokeApig({
       path: `/feeds/${this.props.match.params.id}`,
       method: 'PUT',
-      body: note
+      body: feed
     })
   }
 
@@ -75,9 +63,9 @@ class Notes extends Component {
     this.setState({ isLoading: true })
 
     try {
-      await this.saveNote({
-        ...this.state.note,
-        content: this.state.content
+      await this.saveFeed({
+        ...this.state.feed,
+        feedName: this.state.feedName
       })
       this.props.history.push('/')
     } catch (e) {
@@ -86,7 +74,7 @@ class Notes extends Component {
     }
   }
 
-  deleteNote() {
+  deleteFeed() {
     return invokeApig({
       path: `/feeds/${this.props.match.params.id}`,
       method: 'DELETE'
@@ -107,7 +95,7 @@ class Notes extends Component {
     this.setState({ isDeleting: true })
 
     try {
-      await this.deleteNote()
+      await this.deleteFeed()
       this.props.history.push('/')
     } catch (e) {
       alert(e)
@@ -117,35 +105,15 @@ class Notes extends Component {
 
   render() {
     return (
-      <div className="Notes">
-        {this.state.note && (
+      <div className="Feeds">
+        {this.state.feed && (
           <form onSubmit={this.handleSubmit}>
-            <FormGroup controlId="content">
+            <FormGroup controlId="feedName">
               <FormControl
                 onChange={this.handleChange}
-                value={this.state.content}
+                value={this.state.feedName}
                 componentClass="textarea"
               />
-            </FormGroup>
-            {this.state.note.attachment && (
-              <FormGroup>
-                <ControlLabel>Attachment</ControlLabel>
-                <FormControl.Static>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={this.state.note.attachment}
-                  >
-                    {formatFilename(this.state.note.attachment)}
-                  </a>
-                </FormControl.Static>
-              </FormGroup>
-            )}
-            <FormGroup controlId="file">
-              {!this.state.note.attachment && (
-                <ControlLabel>Attachment</ControlLabel>
-              )}
-              <FormControl onChange={this.handleFileChange} type="file" />
             </FormGroup>
             <LoaderButton
               block
@@ -173,7 +141,7 @@ class Notes extends Component {
   }
 }
 
-Notes.propTypes = {
+Feeds.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string
@@ -184,4 +152,4 @@ Notes.propTypes = {
   }).isRequired
 }
 
-export default Notes
+export default Feeds

@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { FormGroup, FormControl } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
-import './NewNote.css'
+import './NewFeed.css'
 import { invokeApig } from '../libs/awsLibs'
 import LoaderButton from '../components/LoaderButton'
 
-function createNote(feed) {
+function createFeed(feed) {
   return invokeApig({
     path: '/feeds',
     method: 'POST',
@@ -14,12 +14,12 @@ function createNote(feed) {
   })
 }
 
-class NewNote extends Component {
+class NewFeed extends Component {
   constructor(props) {
     super(props)
     this.state = {
       isLoading: null,
-      content: ''
+      feedName: ''
     }
     this.validateForm = this.validateForm.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -27,7 +27,7 @@ class NewNote extends Component {
   }
 
   validateForm() {
-    return this.state.content.length > 0
+    return this.state.feedName.length > 0
   }
 
   handleChange(event) {
@@ -42,8 +42,8 @@ class NewNote extends Component {
     this.setState({ isLoading: true })
 
     try {
-      await createNote({
-        content: this.state.content
+      await createFeed({
+        feedName: this.state.feedName
       })
       this.props.history.push('/')
     } catch (e) {
@@ -54,12 +54,12 @@ class NewNote extends Component {
 
   render() {
     return (
-      <div className="NewNote">
+      <div className="NewFeed">
         <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="content">
+          <FormGroup controlId="feedName">
             <FormControl
               onChange={this.handleChange}
-              value={this.state.content}
+              value={this.state.feedName}
               componentClass="textarea"
             />
           </FormGroup>
@@ -79,11 +79,11 @@ class NewNote extends Component {
   }
 }
 
-NewNote.propTypes = {
+NewFeed.propTypes = {
   history: PropTypes.shape({
     location: PropTypes.object,
     push: PropTypes.func
   }).isRequired
 }
 
-export default NewNote
+export default NewFeed

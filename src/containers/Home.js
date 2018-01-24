@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import './Home.css'
 import { invokeApig } from '../libs/awsLibs'
 
-function notes() {
+function feeds() {
   return invokeApig({ path: '/feeds' })
 }
 
@@ -32,11 +32,11 @@ class Home extends Component {
     super(props)
     this.state = {
       isLoading: true,
-      notes: []
+      feeds: []
     }
-    this.handleNoteClick = this.handleNoteClick.bind(this)
-    this.renderNotes = this.renderNotes.bind(this)
-    this.renderNotesList = this.renderNotesList.bind(this)
+    this.handleFeedClick = this.handleFeedClick.bind(this)
+    this.renderFeeds = this.renderFeeds.bind(this)
+    this.renderFeedsList = this.renderFeedsList.bind(this)
   }
 
   async componentDidMount() {
@@ -44,36 +44,36 @@ class Home extends Component {
       return
     }
     try {
-      const results = await notes()
-      this.setState({ notes: results })
+      const results = await feeds()
+      this.setState({ feeds: results })
     } catch (e) {
       alert(e)
     }
     this.setState({ isLoading: false })
   }
 
-  handleNoteClick(event) {
+  handleFeedClick(event) {
     event.preventDefault()
     this.props.history.push(event.currentTarget.getAttribute('href'))
   }
 
-  renderNotesList(allNotes) {
-    return [{}].concat(allNotes).map(
-      (note, i) =>
+  renderFeedsList(allFeeds) {
+    return [{}].concat(allFeeds).map(
+      (feed, i) =>
         i !== 0 ? (
           <ListGroupItem
-            key={note.feedId}
-            href={`/notes/${note.feedId}`}
-            onClick={this.handleNoteClick}
-            header={note.content.trim().split('\n')[0]}
+            key={feed.feedId}
+            href={`/feeds/${feed.feedId}`}
+            onClick={this.handleFeedClick}
+            header={feed.feedName.trim().split('\n')[0]}
           >
-            {`Created: ${new Date(note.createdAt).toLocaleString()}`}
+            {`Created: ${new Date(feed.createdAt).toLocaleString()}`}
           </ListGroupItem>
         ) : (
           <ListGroupItem
             key="new"
             href="/feeds/new"
-            onClick={this.handleNoteClick}
+            onClick={this.handleFeedClick}
           >
             <h4>
               <b>{'\uFF0B'}</b> Add a new feed
@@ -83,12 +83,12 @@ class Home extends Component {
     )
   }
 
-  renderNotes() {
+  renderFeeds() {
     return (
-      <div className="notes">
+      <div className="feeds">
         <PageHeader>Your Feeds</PageHeader>
         <ListGroup>
-          {!this.state.isLoading && this.renderNotesList(this.state.notes)}
+          {!this.state.isLoading && this.renderFeedsList(this.state.feeds)}
         </ListGroup>
       </div>
     )
@@ -97,7 +97,7 @@ class Home extends Component {
   render() {
     return (
       <div className="Home">
-        {this.props.isAuthenticated ? this.renderNotes() : renderLander()}
+        {this.props.isAuthenticated ? this.renderFeeds() : renderLander()}
       </div>
     )
   }

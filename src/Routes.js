@@ -8,9 +8,9 @@ import UnauthenticatedRoute from './components/UnauthenticatedRoute'
 
 import Home from './containers/Home'
 import Login from './containers/Login'
-import Notes from './containers/Notes'
+import Feeds from './containers/Feeds'
 import Signup from './containers/Signup'
-import NewNote from './containers/NewNote'
+import NewFeed from './containers/NewFeed'
 import NotFound from './containers/NotFound'
 
 const Routes = ({ childProps }) => (
@@ -31,13 +31,13 @@ const Routes = ({ childProps }) => (
     <AuthenticatedRoute
       path="/feeds/new"
       exact
-      component={NewNote}
+      component={NewFeed}
       props={childProps}
     />
     <AuthenticatedRoute
-      path="/notes/:id"
+      path="/feeds/:id"
       exact
-      component={Notes}
+      component={Feeds}
       props={childProps}
     />
     {/* Finally, catch all unmatched routes */}
