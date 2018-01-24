@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { FormGroup, FormControl } from 'react-bootstrap'
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 
 import './Feeds.css'
 import { invokeApig } from '../libs/awsLibs'
@@ -14,7 +14,8 @@ class Feeds extends Component {
       isLoading: null,
       isDeleting: null,
       feed: null,
-      feedName: ''
+      feedName: '',
+      feedUrl: ''
     }
 
     this.validateForm = this.validateForm.bind(this)
@@ -26,9 +27,12 @@ class Feeds extends Component {
   async componentDidMount() {
     try {
       const results = await this.getFeed()
+      const content = await this.getContent()
       this.setState({
         feed: results,
-        feedName: results.feedName
+        content: content,
+        feedName: results.feedName,
+        feedUrl: results.feedUrl
       })
     } catch (e) {
       alert(e)
@@ -39,8 +43,12 @@ class Feeds extends Component {
     return invokeApig({ path: `/feeds/${this.props.match.params.id}` })
   }
 
+  getContent() {
+    return 'some great content!'
+  }
+
   validateForm() {
-    return this.state.feedName.length > 0
+    return this.state.feedName.length > 0 && this.state.feedUrl.length > 0
   }
 
   handleChange(event) {
@@ -65,7 +73,8 @@ class Feeds extends Component {
     try {
       await this.saveFeed({
         ...this.state.feed,
-        feedName: this.state.feedName
+        feedName: this.state.feedName,
+        feedUrl: this.state.feedUrl
       })
       this.props.history.push('/')
     } catch (e) {
@@ -109,10 +118,19 @@ class Feeds extends Component {
         {this.state.feed && (
           <form onSubmit={this.handleSubmit}>
             <FormGroup controlId="feedName">
+              <ControlLabel>Name:</ControlLabel>
               <FormControl
+                type="text"
                 onChange={this.handleChange}
                 value={this.state.feedName}
-                componentClass="textarea"
+              />
+            </FormGroup>
+            <FormGroup controlId="feedUrl">
+              <ControlLabel>RSS URL:</ControlLabel>
+              <FormControl
+                type="text"
+                value={this.state.feedUrl}
+                onChange={this.handleChange}
               />
             </FormGroup>
             <LoaderButton
@@ -136,6 +154,7 @@ class Feeds extends Component {
             />
           </form>
         )}
+        {<span>{this.state.content}</span>}
       </div>
     )
   }

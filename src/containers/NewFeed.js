@@ -67,7 +67,7 @@ class NewFeed extends Component {
             />
           </FormGroup>
           <FormGroup controlId="feedUrl">
-            <ControlLabel>RSS Url:</ControlLabel>
+            <ControlLabel>RSS URL:</ControlLabel>
             <FormControl
               type="text"
               value={this.state.feedUrl}
