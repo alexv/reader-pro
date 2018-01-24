@@ -65,9 +65,9 @@ class Home extends Component {
             key={feed.feedId}
             href={`/feeds/${feed.feedId}`}
             onClick={this.handleFeedClick}
-            header={feed.feedName.trim().split('\n')[0]}
+            header={feed.feedName}
           >
-            {`Created: ${new Date(feed.createdAt).toLocaleString()}`}
+            {feed.feedUrl}
           </ListGroupItem>
         ) : (
           <ListGroupItem

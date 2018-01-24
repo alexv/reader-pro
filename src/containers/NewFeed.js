@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormGroup, FormControl } from 'react-bootstrap'
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 import './NewFeed.css'
@@ -19,7 +19,8 @@ class NewFeed extends Component {
     super(props)
     this.state = {
       isLoading: null,
-      feedName: ''
+      feedName: '',
+      feedUrl: ''
     }
     this.validateForm = this.validateForm.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -27,7 +28,7 @@ class NewFeed extends Component {
   }
 
   validateForm() {
-    return this.state.feedName.length > 0
+    return this.state.feedName.length > 0 && this.state.feedUrl.length > 0
   }
 
   handleChange(event) {
@@ -43,7 +44,8 @@ class NewFeed extends Component {
 
     try {
       await createFeed({
-        feedName: this.state.feedName
+        feedName: this.state.feedName,
+        feedUrl: this.state.feedUrl
       })
       this.props.history.push('/')
     } catch (e) {
@@ -57,10 +59,19 @@ class NewFeed extends Component {
       <div className="NewFeed">
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="feedName">
+            <ControlLabel>Name:</ControlLabel>
             <FormControl
-              onChange={this.handleChange}
+              type="text"
               value={this.state.feedName}
-              componentClass="textarea"
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+          <FormGroup controlId="feedUrl">
+            <ControlLabel>RSS Url:</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.feedUrl}
+              onChange={this.handleChange}
             />
           </FormGroup>
           <LoaderButton
@@ -70,8 +81,8 @@ class NewFeed extends Component {
             disabled={!this.validateForm()}
             type="submit"
             isLoading={this.state.isLoading}
-            text="Create"
-            loadingText="Creating…"
+            text="Add"
+            loadingText="Adding…"
           />
         </form>
       </div>

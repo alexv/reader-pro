@@ -85,7 +85,7 @@ class Feeds extends Component {
     event.preventDefault()
 
     const confirmed = window.confirm(
-      'Are you sure you want to delete this note?'
+      'Are you sure you want to delete this feed?'
     )
 
     if (!confirmed) {
